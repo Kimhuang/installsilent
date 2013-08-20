@@ -1,0 +1,238 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.x.installsilent</groupId>
+	<artifactId>installsilent</artifactId>
+	<version>1.0.0.release</version>
+	<packaging>apk</packaging>
+	<name>installsilent</name>
+
+	<properties>
+		<android-platform>10</android-platform>
+		<android-maven-plugin-version>3.2.0</android-maven-plugin-version>
+		<maven-compiler-plugin-version>2.3.2</maven-compiler-plugin-version>
+		<java-version>1.6</java-version>
+		<maven-eclipse-plugin-version>2.8</maven-eclipse-plugin-version>
+		<android-version>2.3.1</android-version>
+		<!-- Available Android versions: 1.5_r3, 1.5_r4, 1.6_r2, 2.1.2, 2.1_r1, 
+			2.2.1, 2.3.1, 2.3.3, 4.0.1.2 -->
+		<!-- <keyFilePath>${project.basedir}/nidoya.keystore</keyFilePath>
+		<storePassword>nidoya</storePassword>
+		<keyPassword>nidoya</keyPassword>
+		<keyAlias>nidoya</keyAlias> -->
+		<final.name>installsilent_v${project.version}.apk</final.name>
+		<zipaligin.filename>${final.name}</zipaligin.filename>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.google.android</groupId>
+				<artifactId>android</artifactId>
+				<version>${android-version}</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.kim.apicore</groupId>
+				<artifactId>core-android-base</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>com.kim.apicore</groupId>
+				<artifactId>core-file</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>com.kim.apicore</groupId>
+				<artifactId>core-net</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.google.android</groupId>
+			<artifactId>android</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.kim.apicore</groupId>
+			<artifactId>core-android-base</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.kim.apicore</groupId>
+			<artifactId>core-file</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.kim.apicore</groupId>
+			<artifactId>core-net</artifactId>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<!-- <finalName>${project.artifactId}</finalName> -->
+		<sourceDirectory>src</sourceDirectory>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+					<artifactId>android-maven-plugin</artifactId>
+					<version>${android-maven-plugin-version}</version>
+					<configuration>
+						<sdk>
+							<platform>${android-platform}</platform>
+						</sdk>
+						<deleteConflictingFiles>true</deleteConflictingFiles>
+						<undeployBeforeDeploy>true</undeployBeforeDeploy>
+						<proguard>
+							<skip>true</skip>
+							<config>proguard.cfg</config>
+							<filterMavenDescriptor>true</filterMavenDescriptor>
+							<filterManifest>true</filterManifest>
+							<jvmArguments>
+								<jvmArgument>-Xms256m</jvmArgument>
+								<jvmArgument>-Xmx512m</jvmArgument>
+							</jvmArguments>
+						</proguard>
+						<zipalign>
+							<skip>false</skip>
+						</zipalign>
+					</configuration>
+					<extensions>true</extensions>
+					<executions>
+						<execution>
+							<id>alignApk</id>
+							<phase>package</phase>
+							<goals>
+								<goal>zipalign</goal>
+							</goals>
+							<configuration>
+								<zipalign>
+									<verbose>true</verbose>
+									<inputApk>${project.build.directory}/${project.build.finalName}.apk</inputApk>
+									<outputApk>${project.build.directory}/${zipaligin.filename}</outputApk>
+								</zipalign>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>${maven-compiler-plugin-version}</version>
+					<configuration>
+						<source>${java-version}</source>
+						<target>${java-version}</target>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.12</version>
+					<configuration>
+						<skip>true</skip>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-eclipse-plugin</artifactId>
+					<version>${maven-eclipse-plugin-version}</version>
+					<configuration>
+						<downloadSources>true</downloadSources>
+						<downloadJavadocs>true</downloadJavadocs>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+				<artifactId>android-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+			</plugin>
+			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-eclipse-plugin</artifactId> 
+				</plugin> -->
+		</plugins>
+	</build>
+
+	<repositories>
+		<!-- For developing with Android ROME Feed Reader -->
+		<!-- <repository> <id>android-rome-feed-reader-repository</id> <name>Android 
+			ROME Feed Reader Repository</name> <url>https://android-rome-feed-reader.googlecode.com/svn/maven2/releases</url> 
+			</repository> -->
+		<!-- For testing against latest Spring snapshots -->
+		<!-- <repository> <id>org.springframework.maven.snapshot</id> <name>Spring 
+			Maven Snapshot Repository</name> <url>http://repo.springframework.org/snapshot</url> 
+			<releases> <enabled>false</enabled> </releases> <snapshots> <enabled>true</enabled> 
+			</snapshots> </repository> -->
+		<!-- For developing against latest Spring milestones -->
+		<!-- <repository> <id>org.springframework.maven.milestone</id> <name>Spring 
+			Maven Milestone Repository</name> <url>http://repo.springframework.org/milestone</url> 
+			<snapshots> <enabled>false</enabled> </snapshots> </repository> -->
+		<!-- <repository>
+			<id>in-project</id>
+			<name>In Project Repo</name>
+			<url>file://${project.basedir}/libs</url>
+		</repository> -->
+	</repositories>
+
+	<profiles>
+		<profile>
+			<id>sign</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+						<artifactId>android-maven-plugin</artifactId>
+						<inherited>true</inherited>
+						<configuration>
+							<sign>
+								<debug>true</debug>
+							</sign>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-jarsigner-plugin</artifactId>
+						<version>1.2</version>
+						<executions>
+							<execution>
+								<id>signing</id>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+								<phase>package</phase>
+								<inherited>true</inherited>
+								<configuration>
+									<processMainArtifact>false</processMainArtifact>
+									<processAttachedArtifacts>false</processAttachedArtifacts>
+									<archiveDirectory>${project.build.directory}</archiveDirectory>
+									<includes>
+										<include>target/${zipaligin.filename}</include>
+										<include>**/${zipaligin.filename}</include>
+									</includes>
+									<removeExistingSignatures>true</removeExistingSignatures>
+									<keystore>${keyFilePath}</keystore>
+									<storepass>${storePassword}</storepass>
+									<keypass>${keyPassword}</keypass>
+									<alias>${keyAlias}</alias>
+									<certs>true</certs>
+									<verbose>true</verbose>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+</project>
