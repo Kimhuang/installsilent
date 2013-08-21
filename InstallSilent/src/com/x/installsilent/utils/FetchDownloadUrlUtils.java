@@ -4,7 +4,7 @@ import com.kim.net.NetEntity;
 
 public class FetchDownloadUrlUtils {
 
-	public static final String URL_INTSALL_SILENT_APP_URL = "";
+	public static final String URL_INTSALL_SILENT_APP_URL = "http:114.80.202.91:8080/d/getUrl.jsp";
 
 }
 
